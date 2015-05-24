@@ -17,7 +17,7 @@ module Main (main) where
 import Data.List (isPrefixOf, partition)
 import Data.Vector(Vector, fromList)
 import Language.Haskell.Exts.Annotated (parseFileContentsWithMode, ParseMode(..), knownExtensions, ParseResult(ParseOk, ParseFailed))
-import Language.Haskell.Exts.Extension (Language(..))
+import Language.Haskell.Exts.Extension (Language(..), KnownExtension(..), Extension(..))
 import System.Environment (getArgs, getProgName)
 import System.IO (hPutStrLn, stderr)
 import qualified Data.Text as T (unpack, lines, pack, unlines)
@@ -55,7 +55,22 @@ processFile file ignore_parse_error = do
         parseMode = ParseMode
             { parseFilename = file
             , baseLanguage = Haskell2010
-            , extensions = knownExtensions
+            , extensions = knownExtensions ++ [EnableExtension QuasiQuotes,
+                                               EnableExtension OverloadedStrings,
+                                               EnableExtension GADTs,
+                                               EnableExtension CPP,
+                                               EnableExtension MultiParamTypeClasses,
+                                               EnableExtension MultiWayIf,
+                                               EnableExtension TypeFamilies,
+                                               EnableExtension GeneralizedNewtypeDeriving,
+                                               EnableExtension FlexibleContexts,
+                                               EnableExtension EmptyDataDecls,
+                                               EnableExtension ViewPatterns,
+                                               EnableExtension TupleSections,
+                                               EnableExtension DeriveDataTypeable,
+                                               EnableExtension TemplateHaskell,
+                                               EnableExtension RecordWildCards
+                                              ]
             , ignoreLanguagePragmas = False
             , ignoreLinePragmas = True
             , fixities = Nothing
