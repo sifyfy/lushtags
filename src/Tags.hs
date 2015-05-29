@@ -202,6 +202,7 @@ extractDeclHead :: DeclHead SrcSpanInfo -> (String, SrcSpanInfo)
 extractDeclHead (DHead _ name) = extractName name
 extractDeclHead (DHInfix _ _ name) = extractName name
 extractDeclHead (DHParen _ hd') = extractDeclHead hd'
+extractDeclHead (DHApp _ hd' _) = extractDeclHead hd'
 
 extractConDecl :: ConDecl SrcSpanInfo -> (String, SrcSpanInfo)
 extractConDecl (ConDecl _ name _) = extractName name
