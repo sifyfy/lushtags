@@ -174,7 +174,7 @@ createDeclTags (DataDecl _ dataOrNew _ hd constructors _) =
             DataType _ -> TData
             NewType _ -> TNewType
         dataTag = createTag name kind Nothing Nothing Nothing loc
-    in dataTag : map (createConstructorTag (kind, name)) constructors
+    in dataTag : concatMap (createConstructorTag (kind, name)) constructors
 createDeclTags (TypeSig _ names t) =
     map createFunctionTag names
     where
@@ -186,10 +186,10 @@ createDeclTags (TypeSig _ names t) =
 createDeclTags _ = []
 
 -- TODO Also create tags for record fields
-createConstructorTag :: (TagKind, String) -> QualConDecl SrcSpanInfo -> TagC
+createConstructorTag :: (TagKind, String) -> QualConDecl SrcSpanInfo -> [TagC]
 createConstructorTag parent (QualConDecl _ _ _ con) =
     let (name, loc) = extractConDecl con
-    in createTag name TConstructor (Just parent) Nothing Nothing loc
+    in [createTag name TConstructor (Just parent) Nothing Nothing loc]
 
 extractExportSpec :: ExportSpec SrcSpanInfo -> (String, SrcSpanInfo)
 extractExportSpec (EVar _ _ name) = extractQName name
