@@ -45,6 +45,7 @@ data TagKind
     | TNewType
     | TConstructor
     | TFunction
+    | TField
     deriving (Eq, Ord, Show)
 
 -- Access modifiers comes from the C++ world. Haskell doesn't have them, but
@@ -67,6 +68,7 @@ tagKindName TData = "data"
 tagKindName TNewType = "newtype"
 tagKindName TConstructor = "constructor"
 tagKindName TFunction = "function"
+tagKindName TField = "Field"
 
 tagKindLetter :: TagKind -> Char
 tagKindLetter = head . tagKindName
@@ -189,7 +191,15 @@ createDeclTags _ = []
 createConstructorTag :: (TagKind, String) -> QualConDecl SrcSpanInfo -> [TagC]
 createConstructorTag parent (QualConDecl _ _ _ con) =
     let (name, loc) = extractConDecl con
-    in [createTag name TConstructor (Just parent) Nothing Nothing loc]
+    in [createTag name TConstructor (Just parent) Nothing Nothing loc] ++
+        case con of
+          RecDecl _ _ fields ->
+              let extractFieldDecl (FieldDecl _ [fieldName] _) =
+                    let (fname, floc) = extractName fieldName
+                    in [createTag fname TField (Just (TConstructor, name)) Nothing Nothing floc]
+                  extractFieldDecl _ = []
+              in concatMap extractFieldDecl fields
+          _ -> []
 
 extractExportSpec :: ExportSpec SrcSpanInfo -> (String, SrcSpanInfo)
 extractExportSpec (EVar _ _ name) = extractQName name
