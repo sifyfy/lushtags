@@ -20,6 +20,7 @@ if executable('lushtags')
             \ 'e:exports:1',
             \ 'i:imports:1',
             \ 't:declarations:0',
+            \ 'F:fields:1',
             \ 'd:declarations:1',
             \ 'n:declarations:1',
             \ 'f:functions:0',
@@ -30,13 +31,15 @@ if executable('lushtags')
             \ 'd' : 'data',
             \ 'n' : 'newtype',
             \ 'c' : 'constructor',
-            \ 't' : 'type'
+            \ 't' : 'type',
+            \ 'F' : 'field'
         \ },
         \ 'scope2kind' : {
             \ 'data' : 'd',
             \ 'newtype' : 'n',
             \ 'constructor' : 'c',
-            \ 'type' : 't'
+            \ 'type' : 't',
+            \ 'field' : 'F'
         \ }
     \ }
 endif
