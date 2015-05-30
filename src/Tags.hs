@@ -22,7 +22,7 @@ module Tags
 import Data.Vector(Vector, (!))
 import Language.Haskell.Exts.Annotated (SrcSpan(..), SrcSpanInfo(..))
 import Language.Haskell.Exts.Annotated.Syntax
-import Language.Haskell.Exts.Pretty (prettyPrintStyleMode, Style(..), Mode(OneLineMode), defaultMode)
+import Language.Haskell.Exts.Pretty (prettyPrintStyleMode, Style(..), Mode(OneLineMode), defaultMode, Pretty)
 
 data Tag = Tag
     { tagName :: String
@@ -166,6 +166,10 @@ createImportTag (ImportDecl loc (ModuleName _ name) qualified _ _ _ mbAlias mbSp
             Nothing -> if qualified then Just AccessProtected else Just AccessPublic
     in createTag name TImport Nothing signature access loc
 
+
+getOneLineSignature :: (Pretty a) => a -> String
+getOneLineSignature t = prettyPrintStyleMode (Style OneLineMode 0 0) defaultMode t
+
 createDeclTags :: Decl SrcSpanInfo -> [TagC]
 createDeclTags (TypeDecl _ hd _) =
     let (name, loc) = extractDeclHead hd
@@ -180,7 +184,7 @@ createDeclTags (DataDecl _ dataOrNew _ hd constructors _) =
 createDeclTags (TypeSig _ names t) =
     map createFunctionTag names
     where
-        sig = prettyPrintStyleMode (Style OneLineMode 0 0) defaultMode t
+        sig = getOneLineSignature t
         createFunctionTag :: Name SrcSpanInfo -> TagC
         createFunctionTag name =
             let (n, loc) = extractName name
@@ -194,9 +198,10 @@ createConstructorTag parent (QualConDecl _ _ _ con) =
     in [createTag name TConstructor (Just parent) Nothing Nothing loc] ++
         case con of
           RecDecl _ _ fields ->
-              let extractFieldDecl (FieldDecl _ [fieldName] _) =
+              let extractFieldDecl (FieldDecl _ [fieldName] t) =
                     let (fname, floc) = extractName fieldName
-                    in [createTag fname TField (Just (TConstructor, name)) Nothing Nothing floc]
+                        sig = getOneLineSignature t
+                    in [createTag fname TField (Just (TConstructor, name)) (Just sig) Nothing floc]
                   extractFieldDecl _ = []
               in concatMap extractFieldDecl fields
           _ -> []
