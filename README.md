@@ -1,6 +1,11 @@
 lushtags
 ========
 
+This repository is forked from
+(bitc/lushtags)[https://github.com/bitc/lushtags] because it was not
+maintained (at least it looked so to me). The difference from the last
+fork is shown in the last section.
+
 Create ctags compatible tags files for Haskell programs
 
 Similar programs are [hasktags][1], [gasbag][2], [hothasktags][3], and GHC's
@@ -29,6 +34,11 @@ used with Tagbar you get these features:
 
 ![screenshot](https://github.com/bitc/lushtags/raw/master/doc/screenshot-tagbar-2011-09-19.png)
 
+The original version of lushtags could not handle fields, but this
+version can handle them.
+
+![screenshot2](https://www.evernote.com/shard/s75/sh/4f23351b-d866-4069-8de2-a44fd48faa53/077f4a3afd974cda/res/ec3327c2-1961-4aec-985e-ef9661530b93/skitch.png)
+
 [1]: http://hackage.haskell.org/package/hasktags
 [2]: http://kingfisher.nfshost.com/sw/gasbag/
 [3]: http://hackage.haskell.org/package/hothasktags
@@ -45,7 +55,7 @@ Using lushtags with Vim and the Tagbar plugin
 
 2. Install the Tagbar plugin. Tagbar can be found at
 
-    <http://www.vim.org/scripts/script.php?script_id=3465>  
+    <http://www.vim.org/scripts/script.php?script_id=3465>
     <http://majutsushi.github.com/tagbar/>
 
 3. Install the included Haskell Tagbar configuration:
@@ -58,3 +68,9 @@ Using lushtags with Vim and the Tagbar plugin
 
 Now open the Tagbar with the command `:TagbarOpen`. An interactive sidebar will
 appear with all of the tags in your Haskell source file.
+
+Differences from bitc/lushtags
+------------------------------
+
+- Complatible with GHC 7.8.4 (probably with 7.8.3 as well)
+- Outputs record functions.
