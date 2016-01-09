@@ -207,7 +207,7 @@ createConstructorTag parent (QualConDecl _ _ _ con) =
           _ -> []
 
 extractExportSpec :: ExportSpec SrcSpanInfo -> (String, SrcSpanInfo)
-extractExportSpec (EVar _ _ name) = extractQName name
+extractExportSpec (EVar _ name) = extractQName name
 extractExportSpec (EAbs _ name) = extractQName name
 extractExportSpec (EThingAll _ name) = extractQName name
 extractExportSpec (EThingWith _ name _) = extractQName name
